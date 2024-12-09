@@ -13,6 +13,3 @@ Soit:
 Le template utilise des variables (dans la section "Variables") pour la page de garde.
 
 Les variables ayant le commentaire "MEMOIRE UNIQUEMENT", apparaîtront seulement si la variable "typeDocument" vaut MEMOIRE.
-# Template-CNAM
-# Template-CNAM
-# Template-CNAM
