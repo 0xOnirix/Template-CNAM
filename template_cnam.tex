@@ -1,7 +1,7 @@
 % Template LaTeX CNAM
 % Auteur : Adrien 'Onirix' Ketterer
 % Créé le : 09/10/2024
-% Modifié le : 09/10/2024
+% Modifié le : 02/06/2025
 %
 % Ce template prend en compte les exigences de mise en forme du CNAM décrites
 % dans le "Guide pour la rédaction du mémoire d'ingénieur CNAM", disponible ici : https://ecole-ingenieur.cnam.fr/medias/fichier/guide-redaction-memoire-vf-2023_1695841357339-pdf
@@ -13,20 +13,19 @@
 %
 %
 % Le template utilise des variables (dans la section "Variables") pour la page de garde.
-% Les variables ayant le commentaire "MEMOIRE UNIQUEMENT", apparaîtront seulement si
-% la variable "typeDocument" vaut MEMOIRE.
 
 \documentclass[12pt]{article}
 
-\usepackage{fullpage}   % Page de garde améliorée
-\usepackage{mathptmx}   % Utilise la police Times New Roman
-\usepackage{graphicx}   % Permet d'avoir des images
-\usepackage{setspace}   % Permet de modifier l'espacement (interligne, etc)
-\usepackage{fancyhdr}   % Pour personnaliser les en-têtes et pieds de page
-\usepackage{hyperref}   % Permet d'avoir des hyperliens 
-\usepackage{ifthen}     % Permet d'avoir des conditions if, then et else
+\usepackage{fullpage}       % Page de garde améliorée
+\usepackage{mathptmx}       % Utilise la police Times New Roman
+\usepackage{graphicx}       % Permet d'avoir des images
+\usepackage{setspace}       % Permet de modifier l'espacement (interligne, etc)
+\usepackage{fancyhdr}       % Pour personnaliser les en-têtes et pieds de page
+\usepackage{tabularx}       % Permet de mieux gérer les tableaux
+\usepackage{hyperref}       % Permet d'avoir des hyperliens
+\usepackage{ifthen}         % Permet d'avoir des conditions if, then et else
 \usepackage{float}
-\usepackage{xurl}       % Permet de "casser" les url trop longues (pas de débordement)
+\usepackage{xurl}           % Permet de "casser" les url trop longues (pas de débordement)
 
 \hypersetup{                    % parametrage des hyperliens (lié à hyperref)
     colorlinks=true,                % colorise les liens
@@ -38,35 +37,40 @@
 
 \renewcommand{\headrulewidth}{0pt}                  % Enlève la barre horizontale en haut
 \renewcommand{\contentsname}{Table des matières}    % Change le nom du sommaire
-\renewcommand{\listfigurename}{Table des Figures}   % Change le nom de la table de figure
+\renewcommand{\listfigurename}{Liste des figures}   % Change le nom de la liste des figure
+\renewcommand{\listtablename}{Liste des tableaux}   % Change le nom de la liste des tableaux
+\renewcommand{\arraystretch}{1.5}                   % Change le padding des cases des tableaux, Valeur par défaut : 1, ici on augmente à 1.5
+\renewcommand{\tablename}{Tableau}                  % Change le début du caption des tableaux
 \onehalfspacing                                     % Définit un interligne de 1.5 pour tout le document
 
 %%%%%%%%%%%%%%% Variables %%%%%%%%%%%%%%%%%
-\author{John Do}
+\author{NOM AUTEUR}
 
-\newcommand\typeDocument{MEMOIRE}                  % Type du document (MEMOIRE, RAPPORT, etc)
+\newcommand\obtention{Diplôme d'ingénieur cybersécurité CNAM}          % Ce qu'il y a à obtenir, ex: le diplôme d'Ingénieur CNAM, L'UE XXX
 
-\newcommand\obtention{Diplôme d'ingénieur CNAM}                     % Ce qu'il y a à obtenir, ex: le diplôme d'Ingénieur CNAM, L'UE XXX
+\newcommand\specialiteDiplome{Informatique}                             % Spécialité du diplôme
 
-\newcommand\specialiteDiplome{Ingéniosité}             % MEMOIRE UNIQUEMENT - Spécialité du diplôme
+\newcommand\optionDiplome{Cybersécurité}                                % Option du diplôme
 
-\newcommand\optionDiplome{Ingenieux}                 % MEMOIRE UNIQUEMENT - Option du diplôme
+\newcommand\titre{Mémoire de fin de cycle Ingénieur cybersécurité}      % Sujet/titre du document
 
-\newcommand\titre{TITRE DU DOC}                         % Sujet/titre du document
+\newcommand\dateSoutenance{xx/xx/xxxx}
 
-\newcommand\dateSoutenance{01/01/1970}                % MEMOIRE UNIQUEMENT
+\newcommand\presidentJury{Président}
 
-\newcommand\presidentJury{Emmanuel Macron}                 % MEMOIRE UNIQUEMENT
+\newcommand\membresJury{
+    Jury1 - Fonction
 
-\newcommand\membresJury{Someone}                   % MEMOIRE UNIQUEMENT
+    Jury2 - Fonction
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \date{\today}
 \makeatletter
 
 \begin{document}
-\sloppy             % Permet une meilleure gestion des overflow sur la droite
-\pagestyle{empty}   % Supprime temporairement les numéros de page
+\sloppy                         % Permet une meilleure gestion des overflow sur la droite
+\pagestyle{empty}               % Supprime temporairement les numéros de page
 
 %%%%%%%%%%%%% Page de garde %%%%%%%%%%%%%%%
 \begin{titlepage}
@@ -88,7 +92,7 @@
         \centerline{\hbox to 0.5\textwidth{\hrulefill}}     % Ligne horizontale centrée à 50% de la largeur
         \vspace*{1cm}
         
-        \typeDocument\\
+        MEMOIRE
         \vspace*{0.5cm}
 
         présenté en vue d'obtenir\\
@@ -97,15 +101,13 @@
         \obtention\\
         \vspace*{0.5cm}
 
-        \ifthenelse{\equal{\typeDocument}{MEMOIRE}}{
-            SPECIALITE : \specialiteDiplome\\
-            \vspace*{0.5cm}
-        }{}
+        SPECIALITE : \specialiteDiplome\\
+        \vspace*{0.5cm}
 
-        \ifthenelse{\equal{\typeDocument}{MEMOIRE}}{
-            OPTION : \optionDiplome\\
-            \vspace*{0.5cm}
-        }{}
+
+        OPTION : \optionDiplome\\
+        \vspace*{0.5cm}
+
 
         par\\
         \vspace*{0.5cm}
@@ -119,19 +121,24 @@
         \titre\\
         \vspace*{0.5cm}
 
-        \ifthenelse{\equal{\typeDocument}{MEMOIRE}}{
-            Soutenu le \dateSoutenance\\
-            \vspace*{0.5cm}
-        }{}
+
+        Soutenu le \dateSoutenance\\
+        \vspace*{0.5cm}
+
 
     \end{center}
 
-    \ifthenelse{\equal{\typeDocument}{MEMOIRE}}{
-        \vfill{}                                    % "Repousse" le texte en bas - https://texnique.fr/osqa/questions/555/comment-repousser-le-texte-en-bas-de-page
+
+    \vfill{}                                    % "Repousse" le texte en bas - https://texnique.fr/osqa/questions/555/comment-repousser-le-texte-en-bas-de-page
+    {\parindent0pt
         JURY\\
-        PRESIDENT : \presidentJury\\
-        MEMBRES : \membresJury
-    }{}
+        PRESIDENT : \presidentJury - Président(e)\\
+        MEMBRES : 
+        
+        \membresJury
+
+    }
+
 \end{titlepage}
 
 \newpage
@@ -193,6 +200,8 @@
 \endgroup  % Fin de la désactivation de l'indentation
 
 \newpage
+
+%%%%%%%%%%%%%%%%%%% Quatrième de couverture %%%%%%%%%%%%%%%%%%%
 
 \centerline{\hbox to 0.5\textwidth{\hrulefill}}
 
