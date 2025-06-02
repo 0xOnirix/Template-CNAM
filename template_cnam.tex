@@ -16,23 +16,25 @@
 
 \documentclass[12pt]{article}
 
-\usepackage{fullpage}       % Page de garde améliorée
-\usepackage{mathptmx}       % Utilise la police Times New Roman
-\usepackage{graphicx}       % Permet d'avoir des images
-\usepackage{setspace}       % Permet de modifier l'espacement (interligne, etc)
-\usepackage{fancyhdr}       % Pour personnaliser les en-têtes et pieds de page
-\usepackage{tabularx}       % Permet de mieux gérer les tableaux
-\usepackage{hyperref}       % Permet d'avoir des hyperliens
-\usepackage{ifthen}         % Permet d'avoir des conditions if, then et else
+\usepackage[absolute,overlay]{textpos}  % Permet le centrage absolue d'éléments
+\usepackage{fullpage}                   % Page de garde améliorée
+\usepackage{mathptmx}                   % Utilise la police Times New Roman
+\usepackage{graphicx}                   % Permet d'avoir des images
+\usepackage{setspace}                   % Permet de modifier l'espacement (interligne, etc)
+\usepackage{fancyhdr}                   % Pour personnaliser les en-têtes et pieds de page
+\usepackage{tabularx}                   % Permet de mieux gérer les tableaux
+\usepackage{hyperref}                   % Permet d'avoir des hyperliens
+\usepackage{eso-pic}                    % Peremt de rajouter quelque chose sur chaque page
+\usepackage{ifthen}                     % Permet d'avoir des conditions if, then et else
 \usepackage{float}
-\usepackage{xurl}           % Permet de "casser" les url trop longues (pas de débordement)
+\usepackage{xurl}                       % Permet de "casser" les url trop longues (pas de débordement)
 
-\hypersetup{                    % parametrage des hyperliens (lié à hyperref)
-    colorlinks=true,                % colorise les liens
-    breaklinks=true,                % permet les retours à la ligne pour les liens trop longs
-    urlcolor= blue,                 % couleur des hyperliens
-    linkcolor= black,               % couleur des liens internes aux documents (index, figures, tableaux, equations,...)
-    citecolor= green                % couleur des liens vers les references bibliographiques
+\hypersetup{                            % parametrage des hyperliens (lié à hyperref)
+    colorlinks=true,                            % colorise les liens
+    breaklinks=true,                            % permet les retours à la ligne pour les liens trop longs
+    urlcolor= blue,                             % couleur des hyperliens
+    linkcolor= black,                           % couleur des liens internes aux documents (index, figures, tableaux, equations,...)
+    citecolor= green                            % couleur des liens vers les references bibliographiques
 }
 
 \renewcommand{\headrulewidth}{0pt}                  % Enlève la barre horizontale en haut
@@ -42,7 +44,9 @@
 \renewcommand{\arraystretch}{1.5}                   % Change le padding des cases des tableaux, Valeur par défaut : 1, ici on augmente à 1.5
 \renewcommand{\tablename}{Tableau}                  % Change le début du caption des tableaux
 \onehalfspacing                                     % Définit un interligne de 1.5 pour tout le document
-
+\newboolean{showPageNumberFooter}                   % Création d'une variable pour afficher ou non le numéro de page
+\setboolean{showPageNumberFooter}{false}            % Désactivé par défaut
+\pagestyle{empty}                                   % Supprime la numéroation de page par défaut
 %%%%%%%%%%%%%%% Variables %%%%%%%%%%%%%%%%%
 \author{NOM AUTEUR}
 
@@ -64,13 +68,25 @@
     Jury2 - Fonction
 }
 
+\newcommand\piedDePage{Pied de page}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Ajoute le pied de page sur chaque page (page de garde exclu)
+\AddToShipoutPictureBG{
+  \begin{textblock*}{\dimexpr\paperwidth - 2cm}(1cm,27cm)
+    \small\itshape
+    \makebox[\dimexpr\paperwidth - 2cm][s]{%
+      \piedDePage  \hfill \ifthenelse{\boolean{showPageNumberFooter}}{\the\numexpr\value{page} + 1\relax}{}
+    }
+  \end{textblock*}
+}
+
 \date{\today}
 \makeatletter
 
 \begin{document}
-\sloppy                         % Permet une meilleure gestion des overflow sur la droite
-\pagestyle{empty}               % Supprime temporairement les numéros de page
+\sloppy                                                 % Permet une meilleure gestion des overflow sur la droite
 
 %%%%%%%%%%%%% Page de garde %%%%%%%%%%%%%%%
 \begin{titlepage}
@@ -128,8 +144,6 @@
 
     \end{center}
 
-
-    \vfill{}                                    % "Repousse" le texte en bas - https://texnique.fr/osqa/questions/555/comment-repousser-le-texte-en-bas-de-page
     {\parindent0pt
         JURY\\
         PRESIDENT : \presidentJury - Président(e)\\
@@ -139,29 +153,34 @@
 
     }
 
-\end{titlepage}
+    % Position absolue du pied de page : 27.5cm depuis le haut (ajuste selon besoin)
+    \begin{textblock*}{\textwidth}(0cm,27cm)
+        {\small \textit{\piedDePage}}
+    \end{textblock*}
 
+
+\end{titlepage}
+\clearpage
+\setcounter{page}{2}
+\thispagestyle{empty}
+\null
+%%%%%%%%%%%%% Remerciements %%%%%%%%%%%%%%%
 \newpage
-\vspace*{\fill} % Page blanche
+\addcontentsline{toc}{section}{Remerciements}
+\section*{Remerciements}
 %%%%%%%%%%%%% Table des matières %%%%%%%%%%%%%%%
 \newpage
-
 \tableofcontents
+
+\setboolean{showPageNumberFooter}{true} % Réactive la numérotation des pages
 
 %%%%%%%%%%%%% Table des figures %%%%%%%%%%%%%%%%
 \newpage
-
+\addcontentsline{toc}{section}{Liste des figures}
 \listoffigures
 
 %%%%%%%%%%%%%%%%%% Document %%%%%%%%%%%%%%%%%%%%
 \newpage
-
-\setcounter{page}{1}    % Réinitialise le compteur de pages à 1
-\pagestyle{plain}       % Réactive les numéros de page à partir d'ici
-
-\pagestyle{fancy}       % Ce bloc met le numéro de page en bas à droite
-\fancyhf{}
-\fancyfoot[R]{\thepage}
 
 \section*{Liste des abréviations}
 \addcontentsline{toc}{section}{Liste des abréviations}
@@ -191,6 +210,11 @@
 
 \newpage
 
+\section*{Annexes}
+\addcontentsline{toc}{section}{Annexes}
+
+\newpage
+
 \begingroup
 \setlength{\parindent}{0pt}  % Désactive l'indentation
 
@@ -208,6 +232,7 @@
 \begin{center}
 
 \section*{RESUME}
+\addcontentsline{toc}{section}{RESUME}
 
 \end{center}
 
@@ -220,6 +245,7 @@ Ceci est un résumé
 \begin{center}
 
 \center{\section*{ABSTRACT}}
+\addcontentsline{toc}{section}{ABSTRACT}
 
 \end{center}
 
