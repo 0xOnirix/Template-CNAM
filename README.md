@@ -11,7 +11,7 @@ Soit:
 
 Le template utilise des variables (dans la section "Variables") pour la page de garde et pieds de page.
 
-Il utilise également bibtex pour la bibliographie avec le fichier `biblio.tex`
+Il utilise également bibtex pour la bibliographie avec le fichier `biblio.bib`
 
 ## Configuration de LaTeX Workshop (VSCode)
 
