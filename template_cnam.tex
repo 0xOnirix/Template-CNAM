@@ -1,7 +1,7 @@
 % Template LaTeX CNAM
 % Auteur : Adrien 'Onirix' Ketterer
 % Créé le : 09/10/2024
-% Modifié le : 02/06/2025
+% Modifié le : 04/06/2025
 %
 % Ce template prend en compte les exigences de mise en forme du CNAM décrites
 % dans le "Guide pour la rédaction du mémoire d'ingénieur CNAM", disponible ici : https://ecole-ingenieur.cnam.fr/medias/fichier/guide-redaction-memoire-vf-2023_1695841357339-pdf
@@ -11,12 +11,15 @@
 % - Taille police : 12
 % - Interligne : 1.5
 %
-%
 % Le template utilise des variables (dans la section "Variables") pour la page de garde.
+%
+% Attention, il faut le compiler avec xelatex ! Bien lire le README
 
 \documentclass[12pt]{article}
 
 \usepackage[absolute,overlay]{textpos}  % Permet le centrage absolue d'éléments
+\usepackage[acronym]{glossaries}        % Ajoute les acronymes
+\usepackage{fontspec}                   % Gère les polices d'écriture
 \usepackage{fullpage}                   % Page de garde améliorée
 \usepackage{mathptmx}                   % Utilise la police Times New Roman
 \usepackage{graphicx}                   % Permet d'avoir des images
@@ -29,12 +32,14 @@
 \usepackage{float}
 \usepackage{xurl}                       % Permet de "casser" les url trop longues (pas de débordement)
 
+\setmainfont{Times New Roman}           % Définit la police sur Times New Roman
+
 \hypersetup{                            % parametrage des hyperliens (lié à hyperref)
     colorlinks=true,                            % colorise les liens
     breaklinks=true,                            % permet les retours à la ligne pour les liens trop longs
     urlcolor= blue,                             % couleur des hyperliens
     linkcolor= black,                           % couleur des liens internes aux documents (index, figures, tableaux, equations,...)
-    citecolor= green                            % couleur des liens vers les references bibliographiques
+    citecolor= blue                             % couleur des liens vers les references bibliographiques
 }
 
 \renewcommand{\headrulewidth}{0pt}                  % Enlève la barre horizontale en haut
@@ -43,10 +48,13 @@
 \renewcommand{\listtablename}{Liste des tableaux}   % Change le nom de la liste des tableaux
 \renewcommand{\arraystretch}{1.5}                   % Change le padding des cases des tableaux, Valeur par défaut : 1, ici on augmente à 1.5
 \renewcommand{\tablename}{Tableau}                  % Change le début du caption des tableaux
+\renewcommand{\glossaryname}{Glossaire}             % Renomme le glossaire
+\renewcommand{\refname}{Bibliographie}              % Renomme la bibliographie
 \onehalfspacing                                     % Définit un interligne de 1.5 pour tout le document
 \newboolean{showPageNumberFooter}                   % Création d'une variable pour afficher ou non le numéro de page
 \setboolean{showPageNumberFooter}{false}            % Désactivé par défaut
 \pagestyle{empty}                                   % Supprime la numéroation de page par défaut
+
 %%%%%%%%%%%%%%% Variables %%%%%%%%%%%%%%%%%
 \author{NOM AUTEUR}
 
@@ -63,16 +71,30 @@
 \newcommand\presidentJury{Président}
 
 \newcommand\membresJury{
-    Jury1 - Fonction
+    NomJury1 - Fonction
 
-    Jury2 - Fonction
+    NomJury2 - Fonction
 }
 
 \newcommand\piedDePage{Pied de page}
 
+\makeglossaries
+
+%%%%%%%%%%%%%%% Acronymes %%%%%%%%%%%%%%%%%
+
+\newacronym{pentest}{Pentest}{Penetration Testing - Test d'intrusion}
+
+%%%%%%%%%%%%%%% Glossaire %%%%%%%%%%%%%%%%%
+
+\newglossaryentry{forensique}
+{
+    name=forensique,
+    description={ou investigation numérique, est un domaine scientifique  dans lequel on cherche à récupérer et analyser des supports numériques potentiellement suspicieux\cite{forensiquedef}}
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Ajoute le pied de page sur chaque page (page de garde exclu)
+% Ajoute le pied de page sur chaque page (page de garde exclu) + numéro de page
 \AddToShipoutPictureBG{
   \begin{textblock*}{\dimexpr\paperwidth - 2cm}(1cm,27cm)
     \small\itshape
@@ -86,7 +108,7 @@
 \makeatletter
 
 \begin{document}
-\sloppy                                                 % Permet une meilleure gestion des overflow sur la droite
+\sloppy                         % Permet une meilleure gestion des overflow sur la droite
 
 %%%%%%%%%%%%% Page de garde %%%%%%%%%%%%%%%
 \begin{titlepage}
@@ -153,7 +175,7 @@
 
     }
 
-    % Position absolue du pied de page : 27.5cm depuis le haut (ajuste selon besoin)
+    % Position absolue du pied de page : 27cm depuis le haut (ajuste selon besoin)
     \begin{textblock*}{\textwidth}(0cm,27cm)
         {\small \textit{\piedDePage}}
     \end{textblock*}
@@ -164,10 +186,12 @@
 \setcounter{page}{2}
 \thispagestyle{empty}
 \null
+
 %%%%%%%%%%%%% Remerciements %%%%%%%%%%%%%%%
 \newpage
 \addcontentsline{toc}{section}{Remerciements}
 \section*{Remerciements}
+
 %%%%%%%%%%%%% Table des matières %%%%%%%%%%%%%%%
 \newpage
 \tableofcontents
@@ -179,25 +203,26 @@
 \addcontentsline{toc}{section}{Liste des figures}
 \listoffigures
 
-%%%%%%%%%%%%%%%%%% Document %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% Acronymes %%%%%%%%%%%%%%%%%%%%
 \newpage
 
-\section*{Liste des abréviations}
-\addcontentsline{toc}{section}{Liste des abréviations}
+\addcontentsline{toc}{section}{Liste des acronymes}
+\printglossary[type=\acronymtype, title=Liste des acronymes]
 
-\textbf{Exemple :} Exemple\\
-
+%%%%%%%%%%%%%%%%%% Glossaire %%%%%%%%%%%%%%%%%%%%
 \newpage
 
-\section*{Glossaire}
+\glsaddall
+
+\printglossary[toctitle=Glossaire]
 \addcontentsline{toc}{section}{Glossaire}
 
-\textbf{Exemple (ex) :} Exemple\\
-
-\newpage 
-
+%%%%%%%%%%%%%%%%%% Document %%%%%%%%%%%%%%%%%%%%
+\newpage
 \section*{Introduction}
 \addcontentsline{toc}{section}{Introduction}
+
+Exemple pour l'entrée acronyme \gls{pentest} et l'entrée glossaire \gls{forensique}.
 
 \newpage
 
@@ -215,18 +240,12 @@
 
 \newpage
 
-\begingroup
-\setlength{\parindent}{0pt}  % Désactive l'indentation
-
-\section*{Bibliographie}
 \addcontentsline{toc}{section}{Bibliographie}
-
-\endgroup  % Fin de la désactivation de l'indentation
-
-\newpage
+\bibliographystyle{plain}
+\bibliography{biblio}
 
 %%%%%%%%%%%%%%%%%%% Quatrième de couverture %%%%%%%%%%%%%%%%%%%
-
+\newpage
 \centerline{\hbox to 0.5\textwidth{\hrulefill}}
 
 \begin{center}
